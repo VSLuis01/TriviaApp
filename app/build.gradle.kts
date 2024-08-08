@@ -92,11 +92,11 @@ dependencies {
     // Lifecycle utilities for Compose
     implementation(libs.androidx.lifecycle.runtime.compose)
 
+    //Retrofit
+    implementation (libs.retrofit)
 
-
-
-
-
+    //Gson Converter
+    implementation (libs.gson)
 }
 
 // Allow references to generated code
