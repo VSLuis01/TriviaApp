@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "br.com.luise.triviaapp"
-        minSdk = 29
+        minSdk = 27
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -78,7 +78,7 @@ dependencies {
 
     //Dagger - Hilt
     implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
+    kapt(libs.hilt.compiler)
 
     //Lifecycle ViewModel
     // ViewModel
@@ -92,11 +92,13 @@ dependencies {
     // Lifecycle utilities for Compose
     implementation(libs.androidx.lifecycle.runtime.compose)
 
-    //Retrofit
-    implementation (libs.retrofit)
-
     //Gson Converter
     implementation (libs.gson)
+
+    //Retrofit
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
+
 }
 
 // Allow references to generated code
