@@ -1,6 +1,6 @@
 package br.com.luise.triviaapp.network
 
-import br.com.luise.triviaapp.models.Question
+import br.com.luise.triviaapp.models.Questions
 import retrofit2.http.GET
 import javax.inject.Singleton
 
@@ -8,5 +8,5 @@ import javax.inject.Singleton
 interface QuestionApi {
 
     @GET("world.json")
-    suspend fun getAllQuestions(): Question
+    suspend fun getAllQuestions(): Questions
 }
