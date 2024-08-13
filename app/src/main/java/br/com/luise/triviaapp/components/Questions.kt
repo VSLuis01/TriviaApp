@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.RadioButton
@@ -23,6 +25,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.asIntState
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,6 +40,7 @@ import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -65,7 +69,11 @@ fun Question(viewModel: QuestionsViewModel) {
         }
 
         if (!questions.isNullOrEmpty() && question != null) {
-            QuestionDisplay(question = question, questionIndex = questionIndex, viewModel = viewModel) {
+            QuestionDisplay(
+                question = question,
+                questionIndex = questionIndex,
+                viewModel = viewModel
+            ) {
                 questionIndex.intValue += 1
             }
         }
@@ -111,6 +119,10 @@ fun QuestionDisplay(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.Start
         ) {
+            if (questionIndex.value >= 3) {
+                ShowProgress(score = questionIndex.value)
+            }
+
             QuestionTracker(counter = questionIndex.value, outOf = viewModel.data.value.data!!.size)
 
             DrawDottedLine(pathEffect = pathEffect)
@@ -266,6 +278,70 @@ fun DrawDottedLine(pathEffect: PathEffect) {
             end = Offset(x = size.width, y = 0f),
             pathEffect = pathEffect
         )
+    }
+}
+
+@Preview
+@Composable
+fun ShowProgress(score: Int = 12) {
+    val gradient = Brush.linearGradient(listOf(Color(0xFFF95075), Color(0xFFBE6BE5)))
+
+    val progressFactor = remember(score) {
+        mutableFloatStateOf(score * 0.005f)
+    }
+
+    Row(
+        modifier = Modifier
+            .padding(3.dp)
+            .fillMaxWidth()
+            .height(45.dp)
+            .border(
+                width = 4.dp,
+                brush = Brush.linearGradient(
+                    colors = listOf(
+                        AppColors.mLightPurple,
+                        AppColors.mLightPurple
+                    )
+                ),
+                shape = RoundedCornerShape(34.dp)
+            )
+            .clip(
+                RoundedCornerShape(
+                    topStartPercent = 50,
+                    topEndPercent = 50,
+                    bottomStartPercent = 50,
+                    bottomEndPercent = 50
+                )
+            )
+            .background(Color.Transparent),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Button(
+            modifier = Modifier
+                .fillMaxWidth(progressFactor.floatValue)
+                .background(brush = gradient),
+            contentPadding = PaddingValues(1.dp),
+            enabled = false,
+            elevation = null,
+            colors = ButtonColors(
+                containerColor = Color.Transparent,
+                contentColor = Color.Transparent,
+                disabledContentColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent
+            ),
+            onClick = { /*TODO*/ }) {
+            Text(
+                text = (score * 10).toString(),
+                modifier = Modifier
+                    .clip(RoundedCornerShape(23.dp))
+                    .fillMaxHeight(0.87f)
+                    .fillMaxWidth()
+                    .padding(6.dp),
+                color = AppColors.mOffWhite,
+                textAlign = TextAlign.Center
+            )
+
+        }
     }
 }
 
